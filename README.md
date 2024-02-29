@@ -39,9 +39,9 @@ pip install protobuf
 
 ## Installing Import Libraries
 
-1. Clone the repository from [GitLab](git@gitlab-x.mcci.com:vinayn/model3501grpcapi.git)
+1. Clone the repository from [Github](https://github.com/mcci-usb/Model3501gRPCapi)
 
-2. Open a `cmd prompt` and change directory to  `{path_to_repository}/model3501grpcapi`. using `cd` into the root directory where setup.py is located
+2. Open a `cmd prompt` and change directory to  `{path_to_repository}/Model3501gRPCapi`. using `cd` into the root directory where setup.py is located
 
 ## Run Server
 
@@ -61,6 +61,11 @@ To run the client script, execute the following command in your terminal:
 python client.py <server_ip> <port_number> <cmd> <value>
 ```
 
+```shell
+Note: Here both server.py and client.py run into difftrent machines.
+
+```
+
 Replace `server_ip` with the IP address of the server, `port_number` with the port number where the server is listening for incoming connections, `cmd` with the desired command, and `value` with the corresponding value for the command.
 
 ```shell
@@ -77,7 +82,7 @@ Note: The server and client run on different machines.
 * example of port_number
 
 ```shell
-python server.py 2022
+python server.py 2023
 ```
 
 ### cmd line arguments to Client
@@ -91,15 +96,15 @@ python server.py 2022
 **NOTE:**
 
 ```shell
-python client.py 192.168.x.xx 2022 -h
+python client.py 192.168.x.xx 2023 -h
 
-python client.py 192.168.x.xx 2022 list
+python client.py 192.168.x.xx 2023 list
 
-python client.py 192.168.x.xx 2022 set_speed s #(set super speed)
+python client.py 192.168.x.xx 2023 set_speed s #(set super speed)
 
-python client.py 192.168.x.xx 2022 set_speed h #(set high speed)
+python client.py 192.168.x.xx 2023 set_speed h #(set high speed)
 
-python client.py 192.168.x.xx 2022 enumerateCharge 40
+python client.py 192.168.x.xx 2023 enumerateCharge 40
 
 ```
 
