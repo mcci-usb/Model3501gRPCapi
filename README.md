@@ -72,7 +72,7 @@ Replace `server_ip` with the IP address of the server, `port_number` with the po
 Note: The server and client run on different machines.
 ```
 
-### cmd line arguments to Server
+## cmd line arguments to Server
 
 * argument 1: `server.py`
 * argument 2: `port_number`
@@ -85,7 +85,7 @@ Note: The server and client run on different machines.
 python server.py 2023
 ```
 
-### cmd line arguments to Client
+## cmd line arguments to Client
 
 * argument 1: `client.py`
 * argument 2: `server_ip_address`
