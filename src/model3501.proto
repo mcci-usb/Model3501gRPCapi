@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package hi_hello;
+
+service GreetingService {
+    rpc SayHi (HiRequest) returns (HiResponse) {}
+    rpc SayHello (HelloRequest) returns (HelloResponse) {}
+    rpc FindUsbDevice (FindUsbDeviceRequest) returns (FindUsbDeviceResponse) {}
+    rpc SetDeviceSpeed (SpeedRequest) returns (SpeedResponse) {}
+    rpc SendData (DataRequest) returns (DataResponse) {}
+}
+
+message HiRequest {
+    string name = 1;
+}
+
+message HiResponse {
+    string message = 1;
+}
+
+message HelloRequest {
+    string name = 1;
+}
+
+message HelloResponse {
+    string message = 1;
+}
+
+message FindUsbDeviceRequest {
+    bool list_devices = 1;
+}
+
+message UsbDevice {
+    string manufacturer = 1;
+    string product = 2;
+    uint32 firmware_version = 3;
+}
+
+message FindUsbDeviceResponse {
+    repeated UsbDevice devices = 1;
+}
+
+message SpeedRequest {
+    string speed_type = 1;
+}
+
+message SpeedResponse {
+    string message = 1;
+}
+
+message DataRequest {
+    int32 watts = 1;
+}
+
+message DataResponse {
+    string message = 1;
+}
