@@ -108,6 +108,10 @@ python client.py 192.168.x.xx 2023 enumerateCharge 40
 
 ```
 
+## Model3501gRPC Preview
+
+![Model3501gRPCPreview](assets/Type-C%20SuperMUTT-Model3501-gRpc.png)
+
 ## Demo Video (Server)
 
 ![Demo Video](assets/Model3501-gRpc-server.gif)
