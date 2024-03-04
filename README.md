@@ -8,9 +8,10 @@ gRPC is a modern, open source, high-performance remote procedure call (RPC) fram
 
 ## Prerequisites for running or building
 
-### Install Python (if not already installed)
+### Install Python 3.8 and above (if not already installed)
 
-Install python package from [python.org](https://www.python.org/ftp/python/3.7.8/python-3.7.8.exe)
+Install python package from [python.org](https://www.python.org/ftp/python/3.8.0/python-3.8.0-amd64.exe)
+
 
 ### Install/upgrade pip
 
@@ -41,7 +42,7 @@ pip install protobuf
 
 1. Clone the repository from [Github](https://github.com/mcci-usb/Model3501gRPCapi)
 
-2. Open a `cmd prompt` and change directory to  `{path_to_repository}/Model3501gRPCapi`. using `cd` into the root directory where setup.py is located
+2. Open a `cmd prompt` and change directory to  `{path_to_repository}/Model3501gRPCapi`. using `cd` into the root directory.
 
 ## Run Server
 
