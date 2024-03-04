@@ -40,7 +40,7 @@ pip install protobuf
 
 ## Installing Import Libraries
 
-1. Clone the repository from [Github](https://github.com/mcci-usb/Model3501gRPCapi)
+1. Clone the repository ```git clone https://github.com/mcci-usb/Model3501gRPCapi.git```
 
 2. Open a `cmd prompt` and change directory to  `{path_to_repository}/Model3501gRPCapi`. using `cd` into the root directory.
 
