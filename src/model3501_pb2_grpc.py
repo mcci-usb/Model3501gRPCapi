@@ -39,6 +39,26 @@ class GreetingServiceStub(object):
                 request_serializer=model3501__pb2.DataRequest.SerializeToString,
                 response_deserializer=model3501__pb2.DataResponse.FromString,
                 )
+        self.CdStressOn = channel.unary_unary(
+                '/hi_hello.GreetingService/CdStressOn',
+                request_serializer=model3501__pb2.CdStressRequest.SerializeToString,
+                response_deserializer=model3501__pb2.CdStressResponse.FromString,
+                )
+        self.CdStressOff = channel.unary_unary(
+                '/hi_hello.GreetingService/CdStressOff',
+                request_serializer=model3501__pb2.CdStressOffRequest.SerializeToString,
+                response_deserializer=model3501__pb2.CdStressOffResponse.FromString,
+                )
+        self.SendPRswapCommand = channel.unary_unary(
+                '/hi_hello.GreetingService/SendPRswapCommand',
+                request_serializer=model3501__pb2.PRswapRequest.SerializeToString,
+                response_deserializer=model3501__pb2.PRswapResponse.FromString,
+                )
+        self.SendDRswapCommand = channel.unary_unary(
+                '/hi_hello.GreetingService/SendDRswapCommand',
+                request_serializer=model3501__pb2.DRswapRequest.SerializeToString,
+                response_deserializer=model3501__pb2.DRswapResponse.FromString,
+                )
 
 
 class GreetingServiceServicer(object):
@@ -74,6 +94,30 @@ class GreetingServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def CdStressOn(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CdStressOff(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def SendPRswapCommand(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def SendDRswapCommand(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_GreetingServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -101,6 +145,26 @@ def add_GreetingServiceServicer_to_server(servicer, server):
                     servicer.SendData,
                     request_deserializer=model3501__pb2.DataRequest.FromString,
                     response_serializer=model3501__pb2.DataResponse.SerializeToString,
+            ),
+            'CdStressOn': grpc.unary_unary_rpc_method_handler(
+                    servicer.CdStressOn,
+                    request_deserializer=model3501__pb2.CdStressRequest.FromString,
+                    response_serializer=model3501__pb2.CdStressResponse.SerializeToString,
+            ),
+            'CdStressOff': grpc.unary_unary_rpc_method_handler(
+                    servicer.CdStressOff,
+                    request_deserializer=model3501__pb2.CdStressOffRequest.FromString,
+                    response_serializer=model3501__pb2.CdStressOffResponse.SerializeToString,
+            ),
+            'SendPRswapCommand': grpc.unary_unary_rpc_method_handler(
+                    servicer.SendPRswapCommand,
+                    request_deserializer=model3501__pb2.PRswapRequest.FromString,
+                    response_serializer=model3501__pb2.PRswapResponse.SerializeToString,
+            ),
+            'SendDRswapCommand': grpc.unary_unary_rpc_method_handler(
+                    servicer.SendDRswapCommand,
+                    request_deserializer=model3501__pb2.DRswapRequest.FromString,
+                    response_serializer=model3501__pb2.DRswapResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -194,5 +258,73 @@ class GreetingService(object):
         return grpc.experimental.unary_unary(request, target, '/hi_hello.GreetingService/SendData',
             model3501__pb2.DataRequest.SerializeToString,
             model3501__pb2.DataResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def CdStressOn(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/hi_hello.GreetingService/CdStressOn',
+            model3501__pb2.CdStressRequest.SerializeToString,
+            model3501__pb2.CdStressResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def CdStressOff(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/hi_hello.GreetingService/CdStressOff',
+            model3501__pb2.CdStressOffRequest.SerializeToString,
+            model3501__pb2.CdStressOffResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def SendPRswapCommand(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/hi_hello.GreetingService/SendPRswapCommand',
+            model3501__pb2.PRswapRequest.SerializeToString,
+            model3501__pb2.PRswapResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def SendDRswapCommand(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/hi_hello.GreetingService/SendDRswapCommand',
+            model3501__pb2.DRswapRequest.SerializeToString,
+            model3501__pb2.DRswapResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
