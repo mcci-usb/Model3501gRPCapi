@@ -1,3 +1,16 @@
+##############################################################################
+# 
+# Module: server.py
+#
+# Description:
+#     This script implements a gRPC server providing services to interact with a 
+#     Model 3501 SuperMUTT USB device.
+#     Released under the MCCI Corporation.
+#
+# Author:
+#     Vinay N, MCCI Corporation
+#
+##############################################################################
 import sys
 import grpc
 from concurrent import futures
@@ -6,6 +19,7 @@ import model3501_pb2_grpc
 import usb.core
 import usb.util
 
+# Constants defining USB device vendor and product IDs
 VENDOR_ID = 0x045E  # Example VID (Microsoft)
 PRODUCT_ID = 0x078F  # Example PID
 
@@ -19,6 +33,12 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
         pass
 
     def FindUsbDevice(self, request, context):
+        """
+        Method to find USB devices connected to the system.
+        self: This is a reference to the instance of the class GreetingService. 
+        request: This parameter represents the request object sent by the client.
+        context: This parameter provides contextual information about the RPC call
+        """
         if request.list_devices:
             devices_info = []
 
@@ -53,6 +73,12 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
             pass
     
     def SetDeviceSpeed(self, request, context):
+        """
+        Method to set the speed of the USB device.
+        self: This is a reference to the instance of the class GreetingService. 
+        request: This parameter represents the request object sent by the client.
+        context: This parameter provides contextual information about the RPC call
+        """
         speed_type = request.speed_type
         device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
         if device is None:
@@ -79,6 +105,12 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
             return model3501_pb2.SpeedResponse(message="Failed to set speed")
     
     def set_device_speed(self, device, speed_type):
+        """
+        Method to set the speed of the USB device.
+        self: This is a reference to the instance of the class GreetingService. 
+        request: This parameter represents the request object sent by the client. I
+        context: This parameter provides contextual information about the RPC call
+        """
         bmRequestType = 0x40
         if speed_type == 's':
             bRequest = 0x15  # Super Speed request
@@ -95,6 +127,12 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
         return result == 0
      
     def SendData(self, request, context):
+        """
+        Method to send data to the USB device.
+        self: This is a reference to the instance of the class GreetingService. 
+        request: This parameter represents the request object sent by the client. I
+        context: This parameter provides contextual information about the RPC call
+        """
         watts = request.watts
         device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
         if device is None:
@@ -112,6 +150,12 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
             return model3501_pb2.DataResponse(message="Failed to send data")
 
     def send_data(self, device, watts):
+        """
+        Method to send watts data to the USB device.
+        self: This is a reference to the instance of the class GreetingService. 
+        request: This parameter represents the request object sent by the client. I
+        context: This parameter provides contextual information about the RPC call
+        """
         bmRequestType_ctrl = 0x40
         bRequest_ctrl = 0xED
         wValue_ctrl = 0x0000
@@ -143,8 +187,14 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
 
         return True
     
-    #------------------ CD STRESS ON -------------
     def CdStressOn(self, request, context):
+        """
+        # To update the status for cmd sent success or failed.
+        self: This is a reference to the instance of the class GreetingService. 
+        request: This parameter represents the request object sent by the client. I
+        context: This parameter provides contextual information about the RPC call
+        """
+        # To update the status for cmd sent success or failed.
         device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
         if device is None:
             print("Device not found")
@@ -161,6 +211,13 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
             return model3501_pb2.CdStressResponse(message="Failed to send CD Stress On command")
 
     def cd_stress_on(self, device):
+        """
+        # Enable connect disconnect stress
+        self: This is a reference to the instance of the class GreetingService. 
+        request: This parameter represents the request object sent by the client. I
+        context: This parameter provides contextual information about the RPC call
+        """
+        # Enable connect disconnect stress
         bmRequestType = 0x40
         bRequest = 0xE8
         wValue = 0x00
@@ -171,9 +228,14 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
         result = device.ctrl_transfer(bmRequestType, bRequest, wValue, wIndex, wLength)
         return result == 0
     
-    #--------------- CDSTRESS OFF ----------------------
-    
     def CdStressOff(self, request, context):
+        """
+        # To update the status for cmd sent success or failed.
+        self: This is a reference to the instance of the class GreetingService. 
+        request: This parameter represents the request object sent by the client. I
+        context: This parameter provides contextual information about the RPC call
+        """
+        # To update the status for cmd sent success or failed.
         device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
         if device is None:
             print("Device not found")
@@ -190,7 +252,13 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
             return model3501_pb2.CdStressResponse(message="Failed to send CD Stress Off command")
 
     def cd_stress_off(self, device):
-        # Setup packet details HOST to DEVICE
+        """
+        # Disable connect disconnect stress
+        self: This is a reference to the instance of the class GreetingService. 
+        request: This parameter represents the request object sent by the client. I
+        context: This parameter provides contextual information about the RPC call
+        """
+        # Disable connect disconnect stress
         bmRequestType = 0x40  # Request type: Vendor, Host-to-device, Device-to-interface
         bRequest = 0xE8      # Request code for CD Stress Off command
         wValue = 0x0000       # Value
@@ -200,10 +268,15 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
         # Send control transfer
         result = device.ctrl_transfer(bmRequestType, bRequest, wValue, wIndex, wLength)
         return result == 0
-
-    #----------------------------------------------------
    
     def SendPRswapCommand(self, request, context):
+        """
+        # Initiate power role swap
+        self: This is a reference to the instance of the class GreetingService. 
+        request: This parameter represents the request object sent by the client. I
+        context: This parameter provides contextual information about the RPC call
+        """
+        # Initiate power role swap
         device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
         if device is None:
             print("Device not found")
@@ -218,6 +291,13 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
         return model3501_pb2.PRswapResponse(message="Control transfer result for PRswap command:\n{}".format(result_prswap))
 
     def SendDRswapCommand(self, request, context):
+        """
+        # Initiate data role swap
+        self: This is a reference to the instance of the class GreetingService. 
+        request: This parameter represents the request object sent by the client. I
+        context: This parameter provides contextual information about the RPC call
+        """
+        # Initiate data role swap
         device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
         if device is None:
             print("Device not found")
@@ -231,10 +311,10 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
 
         return model3501_pb2.DRswapResponse(message="Control transfer result for DRSWAP command:\n{}".format(result_drswap))
 
-        #----------------------------------------------
-
-
 def serve(port):
+    """
+    Method to start the gRPC server.
+    """
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     model3501_pb2_grpc.add_GreetingServiceServicer_to_server(GreetingService(), server)
     server.add_insecure_port('[::]:' + str(port))
@@ -248,6 +328,9 @@ def serve(port):
         server.stop(0)
 
 if __name__ == '__main__':
+    """
+    Main entry point of the script.
+    """
     if len(sys.argv) != 2:
         print("Usage: python server.py <port>")
         sys.exit(1)

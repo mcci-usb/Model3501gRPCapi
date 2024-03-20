@@ -1,10 +1,27 @@
 
+##############################################################################
+# 
+# Module: client.py
+#
+# Description:
+# This script implements a gRPC client to interact with a Model 3501 SuperMUTT USB device.
+# The client sends requests to the server and receives responses.
+#
+#     Released under the MCCI Corporation.
+#
+# Author:
+#     Vinay N, MCCI Corporation
+#
+##############################################################################
 import grpc
 import model3501_pb2
 import model3501_pb2_grpc
 import argparse
 
 def list_devices(server_address):
+    """
+    Method to list USB devices connected to the server.
+    """
     with grpc.insecure_channel(server_address) as channel:
         stub = model3501_pb2_grpc.GreetingServiceStub(channel)
 
@@ -18,6 +35,10 @@ def list_devices(server_address):
             print("  Firmware Version:", device.firmware_version)
 
 def set_speed(server_address, speed_type):
+    """
+    Method to set the speed of the USB device.
+    speed type: speed type is super speed or high speed.
+    """
     with grpc.insecure_channel(server_address) as channel:
         stub = model3501_pb2_grpc.GreetingServiceStub(channel)
 
@@ -26,6 +47,10 @@ def set_speed(server_address, speed_type):
         print("Response from SetDeviceSpeed:", response.message)
 
 def enumerate_charge(server_address, watts):
+    """
+    Method to emulate charging on the USB device.
+    watts: to set emulatecharge in watts.
+    """
     with grpc.insecure_channel(server_address) as channel:
         stub = model3501_pb2_grpc.GreetingServiceStub(channel)
 
@@ -34,6 +59,9 @@ def enumerate_charge(server_address, watts):
         print("Response from EnumerateCharge:", response.message)
 
 def cd_stress_on(server_address):
+    """
+    Enable connect disconnect stress
+    """
     with grpc.insecure_channel(server_address) as channel:
         stub = model3501_pb2_grpc.GreetingServiceStub(channel)
 
@@ -42,6 +70,9 @@ def cd_stress_on(server_address):
         print("Response from CdStressOn:", response.message)
 
 def cd_stress_off(server_address):
+    """
+    Disable connect disconnect stress
+    """
     with grpc.insecure_channel(server_address) as channel:
         stub = model3501_pb2_grpc.GreetingServiceStub(channel)
 
@@ -50,6 +81,9 @@ def cd_stress_off(server_address):
         print("Response from CdStressOff:", response.message)
 
 def prswap(server_address):
+    """
+    Initiate power role swap
+    """
     with grpc.insecure_channel(server_address) as channel:
         stub = model3501_pb2_grpc.GreetingServiceStub(channel)
 
@@ -58,6 +92,9 @@ def prswap(server_address):
         print("Response from PRswap command:", response.message)
 
 def drswap(server_address):
+    """
+    Initiate data role swap
+    """
     with grpc.insecure_channel(server_address) as channel:
         stub = model3501_pb2_grpc.GreetingServiceStub(channel)
 
