@@ -1,3 +1,4 @@
+
 ##############################################################################
 # 
 # Module: client.py
@@ -6,20 +7,12 @@
 # This script implements a gRPC client to interact with a Model 3501 SuperMUTT USB device.
 # The client sends requests to the server and receives responses.
 #
-# Copyright notice:
-#     This file copyright (c) 2024 by
-#
-#         MCCI Corporation
-#         3520 Krums Corners Road
-#         Ithaca, NY  14850
-#
 #     Released under the MCCI Corporation.
 #
 # Author:
 #     Vinay N, MCCI Corporation
 #
 ##############################################################################
-
 import grpc
 import model3501_pb2
 import model3501_pb2_grpc
@@ -65,11 +58,55 @@ def enumerate_charge(server_address, watts):
         response = stub.SendData(model3501_pb2.DataRequest(watts=watts))
         print("Response from EnumerateCharge:", response.message)
 
+def cd_stress_on(server_address):
+    """
+    Enable connect disconnect stress
+    """
+    with grpc.insecure_channel(server_address) as channel:
+        stub = model3501_pb2_grpc.GreetingServiceStub(channel)
+
+        # Call the CdStressOn method
+        response = stub.CdStressOn(model3501_pb2.CdStressRequest())
+        print("Response from CdStressOn:", response.message)
+
+def cd_stress_off(server_address):
+    """
+    Disable connect disconnect stress
+    """
+    with grpc.insecure_channel(server_address) as channel:
+        stub = model3501_pb2_grpc.GreetingServiceStub(channel)
+
+        # Call the CdStressOff method
+        response = stub.CdStressOff(model3501_pb2.CdStressOffRequest())
+        print("Response from CdStressOff:", response.message)
+
+def prswap(server_address):
+    """
+    Initiate power role swap
+    """
+    with grpc.insecure_channel(server_address) as channel:
+        stub = model3501_pb2_grpc.GreetingServiceStub(channel)
+
+        # Call the SendPRswapCommand method
+        response = stub.SendPRswapCommand(model3501_pb2.PRswapRequest())
+        print("Response from PRswap command:", response.message)
+
+def drswap(server_address):
+    """
+    Initiate data role swap
+    """
+    with grpc.insecure_channel(server_address) as channel:
+        stub = model3501_pb2_grpc.GreetingServiceStub(channel)
+
+        # Call the SendDRswapCommand method
+        response = stub.SendDRswapCommand(model3501_pb2.DRswapRequest())
+        print("Response from DRSWAP command:", response.message)
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='gRPC Client')
     parser.add_argument('server_ip', help='Server IP address')
     parser.add_argument('server_port', type=int, help='Server port number')
-    parser.add_argument('action', choices=['list', 'set_speed', 'enumerateCharge'], help='Action to perform')
+    parser.add_argument('action', choices=['list', 'set_speed', 'enumerateCharge', 'cd_stress_on','cd_stress_off', 'prswap', 'drswap'], help='Action to perform')
     parser.add_argument('value', nargs='?', help='Value for the action [s, h set the speed, W Emulate a PD charger with max W]')
     args = parser.parse_args()
     
@@ -87,5 +124,15 @@ if __name__ == '__main__':
             enumerate_charge(server_address, int(args.value))
         else:
             print("Watts not provided. Please provide watts.")
+    elif args.action == 'cd_stress_on':
+        cd_stress_on(server_address)
+    
+    elif args.action == 'cd_stress_off':
+        cd_stress_off(server_address)
+
+    elif args.action == 'prswap':
+        prswap(server_address)
+    elif args.action == 'drswap':
+        drswap(server_address)
     else:
         print("Invalid action")

@@ -5,21 +5,12 @@
 # Description:
 #     This script implements a gRPC server providing services to interact with a 
 #     Model 3501 SuperMUTT USB device.
-#
-# Copyright notice:
-#     This file copyright (c) 2024 by
-#
-#         MCCI Corporation
-#         3520 Krums Corners Road
-#         Ithaca, NY  14850
-#
 #     Released under the MCCI Corporation.
 #
 # Author:
 #     Vinay N, MCCI Corporation
 #
 ##############################################################################
-
 import sys
 import grpc
 from concurrent import futures
@@ -28,15 +19,11 @@ import model3501_pb2_grpc
 import usb.core
 import usb.util
 
-
 # Constants defining USB device vendor and product IDs
 VENDOR_ID = 0x045E  # Example VID (Microsoft)
 PRODUCT_ID = 0x078F  # Example PID
 
 class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
-    """
-    Implementation of the gRPC service methods.
-    """
     def SayHi(self, request, context):
         # return model3501_pb2.HiResponse(message=f"Hi, {request.name}!")
         pass
@@ -199,6 +186,130 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
         # print("Control transfer result:", result_ctrl)
 
         return True
+    
+    def CdStressOn(self, request, context):
+        """
+        # To update the status for cmd sent success or failed.
+        self: This is a reference to the instance of the class GreetingService. 
+        request: This parameter represents the request object sent by the client. I
+        context: This parameter provides contextual information about the RPC call
+        """
+        # To update the status for cmd sent success or failed.
+        device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
+        if device is None:
+            print("Device not found")
+            return model3501_pb2.CdStressResponse(message="Device not found")
+
+        # Call the function to send the control transfer
+        success = self.cd_stress_on(device)
+
+        if success:
+            print("CD Stress On command sent successfully")
+            return model3501_pb2.CdStressResponse(message="CD Stress On command sent successfully")
+        else:
+            print("Failed to send CD Stress On command")
+            return model3501_pb2.CdStressResponse(message="Failed to send CD Stress On command")
+
+    def cd_stress_on(self, device):
+        """
+        # Enable connect disconnect stress
+        self: This is a reference to the instance of the class GreetingService. 
+        request: This parameter represents the request object sent by the client. I
+        context: This parameter provides contextual information about the RPC call
+        """
+        # Enable connect disconnect stress
+        bmRequestType = 0x40
+        bRequest = 0xE8
+        wValue = 0x00
+        wIndex = 0x1
+        wLength = 0x00
+
+        # Send control transfer
+        result = device.ctrl_transfer(bmRequestType, bRequest, wValue, wIndex, wLength)
+        return result == 0
+    
+    def CdStressOff(self, request, context):
+        """
+        # To update the status for cmd sent success or failed.
+        self: This is a reference to the instance of the class GreetingService. 
+        request: This parameter represents the request object sent by the client. I
+        context: This parameter provides contextual information about the RPC call
+        """
+        # To update the status for cmd sent success or failed.
+        device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
+        if device is None:
+            print("Device not found")
+            return model3501_pb2.CdStressResponse(message="Device not found")
+
+        # Call the function to send the control transfer
+        success = self.cd_stress_off(device)
+
+        if success:
+            print("CD Stress Off command sent successfully")
+            return model3501_pb2.CdStressResponse(message="CD Stress Off command sent successfully")
+        else:
+            print("Failed to send CD Stress Off command")
+            return model3501_pb2.CdStressResponse(message="Failed to send CD Stress Off command")
+
+    def cd_stress_off(self, device):
+        """
+        # Disable connect disconnect stress
+        self: This is a reference to the instance of the class GreetingService. 
+        request: This parameter represents the request object sent by the client. I
+        context: This parameter provides contextual information about the RPC call
+        """
+        # Disable connect disconnect stress
+        bmRequestType = 0x40  # Request type: Vendor, Host-to-device, Device-to-interface
+        bRequest = 0xE8      # Request code for CD Stress Off command
+        wValue = 0x0000       # Value
+        wIndex = 0x0000       # Index
+        wLength = 0x0000      # Length
+
+        # Send control transfer
+        result = device.ctrl_transfer(bmRequestType, bRequest, wValue, wIndex, wLength)
+        return result == 0
+   
+    def SendPRswapCommand(self, request, context):
+        """
+        # Initiate power role swap
+        self: This is a reference to the instance of the class GreetingService. 
+        request: This parameter represents the request object sent by the client. I
+        context: This parameter provides contextual information about the RPC call
+        """
+        # Initiate power role swap
+        device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
+        if device is None:
+            print("Device not found")
+            return model3501_pb2.PRswapResponse(message="Device not found")
+
+        # Data for PRswap command
+        data_prswap = [0x00, 0x15, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+
+        # Send control transfer for PRswap command
+        result_prswap = device.ctrl_transfer(0x40, 0xE4, 0x0000, 0x0000, data_prswap)
+
+        return model3501_pb2.PRswapResponse(message="Control transfer result for PRswap command:\n{}".format(result_prswap))
+
+    def SendDRswapCommand(self, request, context):
+        """
+        # Initiate data role swap
+        self: This is a reference to the instance of the class GreetingService. 
+        request: This parameter represents the request object sent by the client. I
+        context: This parameter provides contextual information about the RPC call
+        """
+        # Initiate data role swap
+        device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
+        if device is None:
+            print("Device not found")
+            return model3501_pb2.DRswapResponse(message="Device not found")
+
+        # Data for DRSWAP command
+        data_drswap = [0x00, 0x14, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+
+        # Send control transfer for DRSWAP command
+        result_drswap = device.ctrl_transfer(0x40, 0xE4, 0x0000, 0x0000, data_drswap)
+
+        return model3501_pb2.DRswapResponse(message="Control transfer result for DRSWAP command:\n{}".format(result_drswap))
 
 def serve(port):
     """
@@ -208,7 +319,7 @@ def serve(port):
     model3501_pb2_grpc.add_GreetingServiceServicer_to_server(GreetingService(), server)
     server.add_insecure_port('[::]:' + str(port))
     server.start()
-    print("Model3501grpcapi-V1.0.0")
+    print("Model3501grpcapi-V1.1.0")
     print("Server started. Listening on port", port, "...")
     try:
         server.wait_for_termination()

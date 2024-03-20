@@ -8,6 +8,10 @@ service GreetingService {
     rpc FindUsbDevice (FindUsbDeviceRequest) returns (FindUsbDeviceResponse) {}
     rpc SetDeviceSpeed (SpeedRequest) returns (SpeedResponse) {}
     rpc SendData (DataRequest) returns (DataResponse) {}
+    rpc CdStressOn (CdStressRequest) returns (CdStressResponse) {} // Existing RPC definition
+    rpc CdStressOff (CdStressOffRequest) returns (CdStressOffResponse) {} // New RPC definition
+    rpc SendPRswapCommand (PRswapRequest) returns (PRswapResponse) {} // PRswap RPC definition
+    rpc SendDRswapCommand (DRswapRequest) returns (DRswapResponse) {} // DRswap RPC definition
 }
 
 message HiRequest {
@@ -53,5 +57,37 @@ message DataRequest {
 }
 
 message DataResponse {
+    string message = 1;
+}
+
+message CdStressRequest {
+    // Define any fields needed for CdStressOn
+}
+
+message CdStressResponse {
+    string message = 1;
+}
+
+message CdStressOffRequest {
+    // Define any fields needed for CdStressOff
+}
+
+message CdStressOffResponse {
+    string message = 1;
+}
+
+message PRswapRequest {
+    bytes data = 1;
+}
+
+message PRswapResponse {
+    string message = 1;
+}
+
+message DRswapRequest {
+    bytes data = 1;
+}
+
+message DRswapResponse {
     string message = 1;
 }
