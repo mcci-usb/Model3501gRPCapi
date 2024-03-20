@@ -12,6 +12,9 @@ gRPC is a modern, open source, high-performance remote procedure call (RPC) fram
 
 Install python package from [python.org](https://www.python.org/ftp/python/3.8.0/python-3.8.0-amd64.exe)
 
+```shell
+Note: Install python version above 3.8
+```
 
 ### Install/upgrade pip
 
@@ -106,7 +109,19 @@ python client.py 192.168.x.xx 2023 set_speed s #(set super speed)
 python client.py 192.168.x.xx 2023 set_speed h #(set high speed)
 
 python client.py 192.168.x.xx 2023 enumerateCharge 40
+# (Emulate a PD charger with max watts 'W')
 
+python client.py 192.168.x.xx 2023 cd_stress_on
+# Enable connect disconnect stress
+
+python client.py 192.168.x.xx 2023 cd_stress_off
+# Disable connect disconnect stress
+
+python client.py 192.168.x.xx 2023 prswap
+# Initiate power role swap
+
+python client.py 192.168.x.xx 2023 drswap
+# Initiate data role swap
 ```
 
 ## Model3501gRPC Preview
