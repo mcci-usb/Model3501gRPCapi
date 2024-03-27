@@ -59,6 +59,16 @@ class GreetingServiceStub(object):
                 request_serializer=model3501__pb2.DRswapRequest.SerializeToString,
                 response_deserializer=model3501__pb2.DRswapResponse.FromString,
                 )
+        self.PdCaptiveCable = channel.unary_unary(
+                '/hi_hello.GreetingService/PdCaptiveCable',
+                request_serializer=model3501__pb2.PdCaptiveCableRequest.SerializeToString,
+                response_deserializer=model3501__pb2.PdCaptiveCableResponse.FromString,
+                )
+        self.PdChargerPort = channel.unary_unary(
+                '/hi_hello.GreetingService/PdChargerPort',
+                request_serializer=model3501__pb2.PdChargerPortRequest.SerializeToString,
+                response_deserializer=model3501__pb2.PdChargerPortResponse.FromString,
+                )
 
 
 class GreetingServiceServicer(object):
@@ -118,6 +128,18 @@ class GreetingServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def PdCaptiveCable(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def PdChargerPort(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_GreetingServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -165,6 +187,16 @@ def add_GreetingServiceServicer_to_server(servicer, server):
                     servicer.SendDRswapCommand,
                     request_deserializer=model3501__pb2.DRswapRequest.FromString,
                     response_serializer=model3501__pb2.DRswapResponse.SerializeToString,
+            ),
+            'PdCaptiveCable': grpc.unary_unary_rpc_method_handler(
+                    servicer.PdCaptiveCable,
+                    request_deserializer=model3501__pb2.PdCaptiveCableRequest.FromString,
+                    response_serializer=model3501__pb2.PdCaptiveCableResponse.SerializeToString,
+            ),
+            'PdChargerPort': grpc.unary_unary_rpc_method_handler(
+                    servicer.PdChargerPort,
+                    request_deserializer=model3501__pb2.PdChargerPortRequest.FromString,
+                    response_serializer=model3501__pb2.PdChargerPortResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -326,5 +358,39 @@ class GreetingService(object):
         return grpc.experimental.unary_unary(request, target, '/hi_hello.GreetingService/SendDRswapCommand',
             model3501__pb2.DRswapRequest.SerializeToString,
             model3501__pb2.DRswapResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def PdCaptiveCable(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/hi_hello.GreetingService/PdCaptiveCable',
+            model3501__pb2.PdCaptiveCableRequest.SerializeToString,
+            model3501__pb2.PdCaptiveCableResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def PdChargerPort(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/hi_hello.GreetingService/PdChargerPort',
+            model3501__pb2.PdChargerPortRequest.SerializeToString,
+            model3501__pb2.PdChargerPortResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
