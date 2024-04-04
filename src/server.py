@@ -268,6 +268,81 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
         # Send control transfer
         result = device.ctrl_transfer(bmRequestType, bRequest, wValue, wIndex, wLength)
         return result == 0
+    #----------------------------------------------------------------
+    def PdCaptiveCable(self, request, context):
+        """
+        Method to perform PdCaptiveCable operation.
+        """
+        # Find the USB device
+        device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
+        if device is None:
+            print("Device not found")
+            return model3501_pb2.PdCaptiveCableResponse(message="Device not found")
+
+        # Perform PdCaptiveCable operation
+        success = self.pd_captive_cable(device)
+
+        if success:
+            print("PdCaptiveCable command sent successfully")
+            return model3501_pb2.PdCaptiveCableResponse(message="PdCaptiveCable command sent successfully")
+        else:
+            print("Failed to send PdCaptiveCable command")
+            return model3501_pb2.PdCaptiveCableResponse(message="Failed to send PdCaptiveCable command")
+
+    def pd_captive_cable(self, device):
+        """
+        Method to perform PdCaptiveCable operation on the USB device.
+        """
+        # Control transfer parameters for PdCaptiveCable
+        bmRequestType = 0x40  # Request type: Vendor, Host-to-device, Device-to-interface
+        bRequest = 0xE9       # Request code for PdCaptiveCable command
+        wValue = 0x0000       # Value
+        wIndex = 0x0000       # Index
+        wLength = 0x0000      # Length
+
+        # Send control transfer for PdCaptiveCable command
+        result = device.ctrl_transfer(bmRequestType, bRequest, wValue, wIndex, wLength)
+        return result == 0
+
+    #-----------------------------PD-CAPTIVE-CABLE-END--------------------------------
+    
+    #----------------------------------------------------------------
+    def PdChargerPort(self, request, context):
+        """
+        Method to perform PdCaptiveCable operation.
+        """
+        # Find the USB device
+        device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
+        if device is None:
+            print("Device not found")
+            return model3501_pb2.PdChargerPortResponse(message="Device not found")
+
+        # Perform PdCaptiveCable operation
+        success = self.pd_charger_port(device)
+
+        if success:
+            print("PdChargerPort command sent successfully")
+            return model3501_pb2.PdChargerPortResponse(message="PdCaptiveCable command sent successfully")
+        else:
+            print("Failed to send PdChargerPort command")
+            return model3501_pb2.PdChargerPortResponse(message="Failed to send PdCaptiveCable command")
+
+    def pd_charger_port(self, device):
+        """
+        Method to perform PdCaptiveCable operation on the USB device.
+        """
+        # Control transfer parameters for PdCaptiveCable
+        bmRequestType = 0x40  # Request type: Vendor, Host-to-device, Device-to-interface
+        bRequest = 0xE9       # Request code for PdCaptiveCable command
+        wValue = 0x0000       # Value
+        wIndex = 0x0001       # Index
+        wLength = 0x0000      # Length
+
+        # Send control transfer for PdCaptiveCable command
+        result = device.ctrl_transfer(bmRequestType, bRequest, wValue, wIndex, wLength)
+        return result == 0
+
+    #----------------------------------------------------------------
    
     def SendPRswapCommand(self, request, context):
         """
@@ -319,7 +394,7 @@ def serve(port):
     model3501_pb2_grpc.add_GreetingServiceServicer_to_server(GreetingService(), server)
     server.add_insecure_port('[::]:' + str(port))
     server.start()
-    print("Model3501grpcapi-V1.1.0")
+    print("Model3501grpcapi-V1.2.0")
     print("Server started. Listening on port", port, "...")
     try:
         server.wait_for_termination()

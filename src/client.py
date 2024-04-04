@@ -80,6 +80,28 @@ def cd_stress_off(server_address):
         response = stub.CdStressOff(model3501_pb2.CdStressOffRequest())
         print("Response from CdStressOff:", response.message)
 
+def pd_captive_cable(server_address):
+    """
+    Method to perform PdCaptiveCable operation.
+    """
+    with grpc.insecure_channel(server_address) as channel:
+        stub = model3501_pb2_grpc.GreetingServiceStub(channel)
+
+        # Call the PdCaptiveCable method
+        response = stub.PdCaptiveCable(model3501_pb2.PdCaptiveCableRequest())
+        print("Response from PdCaptiveCable:", response.message)
+
+def pd_charger_port(server_address):
+    """
+    Method to perform PdCaptiveCable operation.
+    """
+    with grpc.insecure_channel(server_address) as channel:
+        stub = model3501_pb2_grpc.GreetingServiceStub(channel)
+
+        # Call the PdCaptiveCable method
+        response = stub.PdCaptiveCable(model3501_pb2.PdChargerPortRequest())
+        print("Response from PdChargerPort:", response.message)
+
 def prswap(server_address):
     """
     Initiate power role swap
@@ -106,7 +128,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='gRPC Client')
     parser.add_argument('server_ip', help='Server IP address')
     parser.add_argument('server_port', type=int, help='Server port number')
-    parser.add_argument('action', choices=['list', 'set_speed', 'enumerateCharge', 'cd_stress_on','cd_stress_off', 'prswap', 'drswap'], help='Action to perform')
+    parser.add_argument('action', choices=['list', 'set_speed', 'enumerateCharge', 'cd_stress_on','cd_stress_off','pdcaptivecable','pdchargerport','prswap', 'drswap'], help='Action to perform')
     parser.add_argument('value', nargs='?', help='Value for the action [s, h set the speed, W Emulate a PD charger with max W]')
     args = parser.parse_args()
     
@@ -129,6 +151,13 @@ if __name__ == '__main__':
     
     elif args.action == 'cd_stress_off':
         cd_stress_off(server_address)
+    
+    # Add this function to the main block for argparse to recognize it as a valid action
+    elif args.action == 'pdcaptivecable':
+        pd_captive_cable(server_address)
+    
+    elif args.action == 'pdchargerport':
+        pd_charger_port(server_address)
 
     elif args.action == 'prswap':
         prswap(server_address)

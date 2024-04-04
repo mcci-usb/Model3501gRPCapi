@@ -12,6 +12,8 @@ service GreetingService {
     rpc CdStressOff (CdStressOffRequest) returns (CdStressOffResponse) {} // New RPC definition
     rpc SendPRswapCommand (PRswapRequest) returns (PRswapResponse) {} // PRswap RPC definition
     rpc SendDRswapCommand (DRswapRequest) returns (DRswapResponse) {} // DRswap RPC definition
+    rpc PdCaptiveCable (PdCaptiveCableRequest) returns (PdCaptiveCableResponse) {}
+    rpc PdChargerPort (PdChargerPortRequest) returns (PdChargerPortResponse) {}
 }
 
 message HiRequest {
@@ -89,5 +91,21 @@ message DRswapRequest {
 }
 
 message DRswapResponse {
+    string message = 1;
+}
+
+message PdCaptiveCableRequest {
+    // Define any fields needed for PdCaptiveCable
+}
+
+message PdCaptiveCableResponse {
+    string message = 1;
+}
+
+message PdChargerPortRequest {
+    // Define any fields needed for PdChargerPort
+}
+
+message PdChargerPortResponse {
     string message = 1;
 }
