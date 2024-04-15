@@ -122,6 +122,12 @@ python client.py 192.168.x.xx 2023 prswap
 
 python client.py 192.168.x.xx 2023 drswap
 # Initiate data role swap
+
+python client.py 192.168.x.xx 2023 pdcaptivecable
+# Switch PD to captive cable
+
+python client.py 192.168.x.xx 2023 pdchargerport
+# Switch PD to charger receptacle
 ```
 
 ## Model3501gRPC Preview
