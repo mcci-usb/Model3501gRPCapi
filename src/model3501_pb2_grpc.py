@@ -69,6 +69,16 @@ class GreetingServiceStub(object):
                 request_serializer=model3501__pb2.PdChargerPortRequest.SerializeToString,
                 response_deserializer=model3501__pb2.PdChargerPortResponse.FromString,
                 )
+        self.GetPowerRole = channel.unary_unary(
+                '/hi_hello.GreetingService/GetPowerRole',
+                request_serializer=model3501__pb2.GetPowerRoleRequest.SerializeToString,
+                response_deserializer=model3501__pb2.GetPowerRoleResponse.FromString,
+                )
+        self.GetRdo = channel.unary_unary(
+                '/hi_hello.GreetingService/GetRdo',
+                request_serializer=model3501__pb2.GetRdoRequest.SerializeToString,
+                response_deserializer=model3501__pb2.GetRdoResponse.FromString,
+                )
 
 
 class GreetingServiceServicer(object):
@@ -140,6 +150,18 @@ class GreetingServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetPowerRole(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetRdo(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_GreetingServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -197,6 +219,16 @@ def add_GreetingServiceServicer_to_server(servicer, server):
                     servicer.PdChargerPort,
                     request_deserializer=model3501__pb2.PdChargerPortRequest.FromString,
                     response_serializer=model3501__pb2.PdChargerPortResponse.SerializeToString,
+            ),
+            'GetPowerRole': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetPowerRole,
+                    request_deserializer=model3501__pb2.GetPowerRoleRequest.FromString,
+                    response_serializer=model3501__pb2.GetPowerRoleResponse.SerializeToString,
+            ),
+            'GetRdo': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetRdo,
+                    request_deserializer=model3501__pb2.GetRdoRequest.FromString,
+                    response_serializer=model3501__pb2.GetRdoResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -392,5 +424,39 @@ class GreetingService(object):
         return grpc.experimental.unary_unary(request, target, '/hi_hello.GreetingService/PdChargerPort',
             model3501__pb2.PdChargerPortRequest.SerializeToString,
             model3501__pb2.PdChargerPortResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetPowerRole(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/hi_hello.GreetingService/GetPowerRole',
+            model3501__pb2.GetPowerRoleRequest.SerializeToString,
+            model3501__pb2.GetPowerRoleResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetRdo(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/hi_hello.GreetingService/GetRdo',
+            model3501__pb2.GetRdoRequest.SerializeToString,
+            model3501__pb2.GetRdoResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

@@ -124,11 +124,42 @@ def drswap(server_address):
         response = stub.SendDRswapCommand(model3501_pb2.DRswapRequest())
         print("Response from DRSWAP command:", response.message)
 
+def get_power_role(server_address):
+    """
+    Method to get the power role of the USB device.
+    """
+    with grpc.insecure_channel(server_address) as channel:
+        stub = model3501_pb2_grpc.GreetingServiceStub(channel)
+
+        # Call the GetPowerRole method
+        response = stub.GetPowerRole(model3501_pb2.GetPowerRoleRequest())
+        
+        power_role_str = ""
+        if response.power_role == model3501_pb2.SINK:
+            power_role_str = "SINK"
+        elif response.power_role == model3501_pb2.SOURCE:
+            power_role_str = "SOURCE"
+        elif response.power_role == model3501_pb2.INVALID:
+            power_role_str = "INVALID"
+        
+        print("Response from GetPowerRole:", power_role_str)
+    
+def get_rdo(server_address):
+    """
+    Method to get the RDO data from the USB device.
+    """
+    with grpc.insecure_channel(server_address) as channel:
+        stub = model3501_pb2_grpc.GreetingServiceStub(channel)
+
+        # Call the GetRdo method
+        response = stub.GetRdo(model3501_pb2.GetRdoRequest())
+        print("Response from GetRdo:", response.rdo_data)
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='gRPC Client')
     parser.add_argument('server_ip', help='Server IP address')
     parser.add_argument('server_port', type=int, help='Server port number')
-    parser.add_argument('action', choices=['list', 'set_speed', 'enumerateCharge', 'cd_stress_on','cd_stress_off','pdcaptivecable','pdchargerport','prswap', 'drswap'], help='Action to perform')
+    parser.add_argument('action', choices=['list', 'set_speed', 'enumerateCharge', 'cd_stress_on','cd_stress_off','pdcaptivecable','pdchargerport','prswap', 'drswap','get_power_role','get_rdo'], help='Action to perform')
     parser.add_argument('value', nargs='?', help='Value for the action [s, h set the speed, W Emulate a PD charger with max W]')
     args = parser.parse_args()
     
@@ -163,5 +194,10 @@ if __name__ == '__main__':
         prswap(server_address)
     elif args.action == 'drswap':
         drswap(server_address)
+    elif args.action == 'get_power_role':
+        get_power_role(server_address)
+    # Inside the main block
+    elif args.action == 'get_rdo':
+        get_rdo(server_address)
     else:
         print("Invalid action")

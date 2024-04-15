@@ -386,6 +386,88 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
 
         return model3501_pb2.DRswapResponse(message="Control transfer result for DRSWAP command:\n{}".format(result_drswap))
 
+    def GetPowerRole(self, request, context):
+        """
+        Method to get the power role of the USB device.
+        """
+        # Find the USB device
+        device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
+        if device is None:
+            return model3501_pb2.GetPowerRoleResponse(power_role=model3501_pb2.INVALID)
+
+        # Set configuration
+        device.set_configuration()
+
+        # First control transfer (HOST to DEVICE)
+        bmRequestType = 0x40  # Request type: Vendor, Host-to-device, Device-to-interface
+        bRequest = 0xE4        # Request code
+        wValue = 0x0000        # Value
+        wIndex = 0x0000        # Index
+        wLength = 0x0010       # Length
+
+        data1 = [0x00, 0x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+
+        result1 = device.ctrl_transfer(bmRequestType, bRequest, wValue, wIndex, data1)
+
+        if result1 != 16:
+            return model3501_pb2.GetPowerRoleResponse(power_role=model3501_pb2.INVALID)
+
+        # Second control transfer (HOST to DEVICE)
+        bmRequestType = 0xC0  # Request type: Vendor, Device-to-host, Device-to-interface
+        bRequest = 0xE4        # Request code
+        wValue = 0x0000        # Value
+        wIndex = 0x0000        # Index
+        wLength = 0x0010       # Length
+
+        result2 = device.ctrl_transfer(bmRequestType, bRequest, wValue, wIndex, wLength)
+
+        hex_strings = ['0x{:02X}'.format(byte) for byte in result2]
+        formatted_hex_string = ' '.join(hex_strings)
+        
+        sink_data = "0x00 0x28 0x02 0x01 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00"
+        source_data = "0x00 0x28 0x02 0x02 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00"
+
+        if formatted_hex_string == sink_data:
+            return model3501_pb2.GetPowerRoleResponse(power_role=model3501_pb2.SINK)
+        elif formatted_hex_string == source_data:
+            return model3501_pb2.GetPowerRoleResponse(power_role=model3501_pb2.SOURCE)
+        else:
+            return model3501_pb2.GetPowerRoleResponse(power_role=model3501_pb2.INVALID)
+    
+    def GetRdo(self, request, context):
+        device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
+        if device is None:
+            return model3501_pb2.GetRdoResponse(rdo_data="Device not found")
+        
+        device.set_configuration()
+        
+        bmRequestType = 0x40  # Request type: Vendor, Host-to-device, Device-to-interface
+        bRequest = 0xE4        # Request code
+        wValue = 0x0000        # Value
+        wIndex = 0x0000        # Index
+        wLength = 0x0010       # Length
+        
+        data1 = [0x00, 0x2A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+        
+        result1 = device.ctrl_transfer(bmRequestType, bRequest, wValue, wIndex, data1)
+        
+        if result1 == 16:
+            bmRequestType = 0xC0  # Request type: Vendor, Device-to-host, Device-to-interface
+            bRequest = 0xE4        # Request code
+            wValue = 0x0000        # Value
+            wIndex = 0x0000        # Index
+            wLength = 0x0010       # Length
+        
+            result2 = device.ctrl_transfer(bmRequestType, bRequest, wValue, wIndex, wLength)
+        
+            hex_strings = ['0x{:02X}'.format(byte) for byte in result2]
+            formatted_hex_string = ' '.join(hex_strings)
+            
+            return model3501_pb2.GetRdoResponse(rdo_data=formatted_hex_string)
+        
+        else:
+            return model3501_pb2.GetRdoResponse(rdo_data="Invalid command")
+        
 def serve(port):
     """
     Method to start the gRPC server.
@@ -394,7 +476,7 @@ def serve(port):
     model3501_pb2_grpc.add_GreetingServiceServicer_to_server(GreetingService(), server)
     server.add_insecure_port('[::]:' + str(port))
     server.start()
-    print("Model3501grpcapi-V1.2.0")
+    print("Model3501grpcapi-V1.3.0")
     print("Server started. Listening on port", port, "...")
     try:
         server.wait_for_termination()
