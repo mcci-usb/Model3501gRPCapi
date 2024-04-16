@@ -8,104 +8,152 @@ service GreetingService {
     rpc FindUsbDevice (FindUsbDeviceRequest) returns (FindUsbDeviceResponse) {}
     rpc SetDeviceSpeed (SpeedRequest) returns (SpeedResponse) {}
     rpc SendData (DataRequest) returns (DataResponse) {}
-    rpc CdStressOn (CdStressRequest) returns (CdStressResponse) {} // Existing RPC definition
-    rpc CdStressOff (CdStressOffRequest) returns (CdStressOffResponse) {} // New RPC definition
-    rpc SendPRswapCommand (PRswapRequest) returns (PRswapResponse) {} // PRswap RPC definition
-    rpc SendDRswapCommand (DRswapRequest) returns (DRswapResponse) {} // DRswap RPC definition
+    rpc CdStressOn (CdStressRequest) returns (CdStressResponse) {}
+    rpc CdStressOff (CdStressOffRequest) returns (CdStressOffResponse) {}
+    rpc SendPRswapCommand (PRswapRequest) returns (PRswapResponse) {}
+    rpc SendDRswapCommand (DRswapRequest) returns (DRswapResponse) {}
     rpc PdCaptiveCable (PdCaptiveCableRequest) returns (PdCaptiveCableResponse) {}
     rpc PdChargerPort (PdChargerPortRequest) returns (PdChargerPortResponse) {}
+    rpc GetPowerRole (GetPowerRoleRequest) returns (GetPowerRoleResponse) {}
+    rpc GetRdo (GetRdoRequest) returns (GetRdoResponse) {}
 }
 
+// Request message for SayHi
 message HiRequest {
     string name = 1;
 }
 
+// Response message for SayHi
 message HiResponse {
     string message = 1;
 }
 
+// Request message for SayHello
 message HelloRequest {
     string name = 1;
 }
 
+// Response message for SayHello
 message HelloResponse {
     string message = 1;
 }
 
+// Request message for FindUsbDevice
 message FindUsbDeviceRequest {
     bool list_devices = 1;
 }
 
+// Response message for FindUsbDevice
 message UsbDevice {
     string manufacturer = 1;
     string product = 2;
     uint32 firmware_version = 3;
 }
 
+// Response message for FindUsbDevice
 message FindUsbDeviceResponse {
     repeated UsbDevice devices = 1;
 }
 
+// Request message for SetDeviceSpeed
 message SpeedRequest {
     string speed_type = 1;
 }
 
+// Response message for SetDeviceSpeed
 message SpeedResponse {
     string message = 1;
 }
 
+// Request message for SendData
 message DataRequest {
     int32 watts = 1;
 }
 
+// Response message for SendData
 message DataResponse {
     string message = 1;
 }
 
+// Request message for CdStressOn
 message CdStressRequest {
     // Define any fields needed for CdStressOn
 }
 
+// Response message for CdStressOn
 message CdStressResponse {
     string message = 1;
 }
 
+// Request message for CdStressOff
 message CdStressOffRequest {
     // Define any fields needed for CdStressOff
 }
 
+// Response message for CdStressOff
 message CdStressOffResponse {
     string message = 1;
 }
 
+// Request message for SendPRswapCommand
 message PRswapRequest {
     bytes data = 1;
 }
 
+// Response message for SendPRswapCommand
 message PRswapResponse {
     string message = 1;
 }
 
+// Request message for SendDRswapCommand
 message DRswapRequest {
     bytes data = 1;
 }
 
+// Response message for SendDRswapCommand
 message DRswapResponse {
     string message = 1;
 }
 
+// Request message for PdCaptiveCable
 message PdCaptiveCableRequest {
     // Define any fields needed for PdCaptiveCable
 }
 
+// Response message for PdCaptiveCable
 message PdCaptiveCableResponse {
     string message = 1;
 }
 
+// Request message for PdChargerPort
 message PdChargerPortRequest {
     // Define any fields needed for PdChargerPort
 }
 
+// Response message for PdChargerPort
 message PdChargerPortResponse {
     string message = 1;
+}
+
+// PowerRoleType enumeration
+enum PowerRoleType {
+  SINK = 0; // Device is drawing power
+  SOURCE = 1; // Device is providing power
+  INVALID = 2; // Invalid or unknown power role
+}
+
+// Request message for GetPowerRole
+message GetPowerRoleRequest {}
+
+// Response message for GetPowerRole
+message GetPowerRoleResponse {
+  PowerRoleType power_role = 1;
+}
+
+// Request message for GetRdo
+message GetRdoRequest {}
+
+// Response message for GetRdo
+message GetRdoResponse {
+  string rdo_data = 1;
 }

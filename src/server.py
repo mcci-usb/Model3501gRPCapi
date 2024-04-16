@@ -35,9 +35,7 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
     def FindUsbDevice(self, request, context):
         """
         Method to find USB devices connected to the system.
-        self: This is a reference to the instance of the class GreetingService. 
-        request: This parameter represents the request object sent by the client.
-        context: This parameter provides contextual information about the RPC call
+        List Type-C MUTTs by index.
         """
         if request.list_devices:
             devices_info = []
@@ -74,18 +72,22 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
     
     def SetDeviceSpeed(self, request, context):
         """
-        Method to set the speed of the USB device.
-        self: This is a reference to the instance of the class GreetingService. 
-        request: This parameter represents the request object sent by the client.
-        context: This parameter provides contextual information about the RPC call
+        self: This is reference to the instance of the class.
+        request:This parameter holds the request message sent by the client.
+        context:Provides contextual information about the RPC, 
+        including handling deadlines and cancellations.
         """
+        # request parameter holds the request message sent by the client.
         speed_type = request.speed_type
         device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
         if device is None:
             print("Device not found")
+            # Context information about the RPC, including 
+            # handling deadlines and cancellations.
             return model3501_pb2.SpeedResponse(message="Device not found")
 
-        device.set_configuration()
+        #This method sets the active configuration for the USB device
+        device.set_configuration() 
 
         if speed_type == 's':
             success = self.set_device_speed(device, 's')
@@ -93,6 +95,9 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
         elif speed_type == 'h':
             success = self.set_device_speed(device, 'h')
             speed = "High Speed"
+        elif speed_type == 'f':
+            success = self.set_device_speed(device, 'f')
+            speed = "Full Speed"
         else:
             print("Invalid speed type")
             return model3501_pb2.SpeedResponse(message="Invalid speed type")
@@ -106,16 +111,16 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
     
     def set_device_speed(self, device, speed_type):
         """
-        Method to set the speed of the USB device.
-        self: This is a reference to the instance of the class GreetingService. 
-        request: This parameter represents the request object sent by the client. I
-        context: This parameter provides contextual information about the RPC call
+        Set to speed 'S'. Options are Full, High, or Super. Or read back
+        current speed if no option passed in.
         """
         bmRequestType = 0x40
         if speed_type == 's':
             bRequest = 0x15  # Super Speed request
         elif speed_type == 'h':
             bRequest = 0x14  # High Speed request
+        elif speed_type == 'f':
+            bRequest = 0x13
         else:
             return False
 
@@ -128,10 +133,7 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
      
     def SendData(self, request, context):
         """
-        Method to send data to the USB device.
-        self: This is a reference to the instance of the class GreetingService. 
-        request: This parameter represents the request object sent by the client. I
-        context: This parameter provides contextual information about the RPC call
+        Emulate a PD charger with max watts 'W'
         """
         watts = request.watts
         device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
@@ -153,8 +155,8 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
         """
         Method to send watts data to the USB device.
         self: This is a reference to the instance of the class GreetingService. 
-        request: This parameter represents the request object sent by the client. I
-        context: This parameter provides contextual information about the RPC call
+        device: device as the USB device object
+        watts:watts as the data to be sent to the USB device.
         """
         bmRequestType_ctrl = 0x40
         bRequest_ctrl = 0xED
@@ -189,10 +191,10 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
     
     def CdStressOn(self, request, context):
         """
-        # To update the status for cmd sent success or failed.
-        self: This is a reference to the instance of the class GreetingService. 
-        request: This parameter represents the request object sent by the client. I
-        context: This parameter provides contextual information about the RPC call
+        self: This is reference to the instance of the class.
+        request:This parameter holds the request message sent by the client.
+        context:Provides contextual information about the RPC, 
+        including handling deadlines and cancellations.
         """
         # To update the status for cmd sent success or failed.
         device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
@@ -212,10 +214,8 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
 
     def cd_stress_on(self, device):
         """
-        # Enable connect disconnect stress
-        self: This is a reference to the instance of the class GreetingService. 
-        request: This parameter represents the request object sent by the client. I
-        context: This parameter provides contextual information about the RPC call
+        Enable connect disconnect stress.
+    
         """
         # Enable connect disconnect stress
         bmRequestType = 0x40
@@ -230,10 +230,10 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
     
     def CdStressOff(self, request, context):
         """
-        # To update the status for cmd sent success or failed.
-        self: This is a reference to the instance of the class GreetingService. 
-        request: This parameter represents the request object sent by the client. I
-        context: This parameter provides contextual information about the RPC call
+        self: This is reference to the instance of the class.
+        request:This parameter holds the request message sent by the client.
+        context:Provides contextual information about the RPC, 
+        including handling deadlines and cancellations.
         """
         # To update the status for cmd sent success or failed.
         device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
@@ -253,10 +253,7 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
 
     def cd_stress_off(self, device):
         """
-        # Disable connect disconnect stress
-        self: This is a reference to the instance of the class GreetingService. 
-        request: This parameter represents the request object sent by the client. I
-        context: This parameter provides contextual information about the RPC call
+        Disable connect disconnect stress
         """
         # Disable connect disconnect stress
         bmRequestType = 0x40  # Request type: Vendor, Host-to-device, Device-to-interface
@@ -271,7 +268,10 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
     #----------------------------------------------------------------
     def PdCaptiveCable(self, request, context):
         """
-        Method to perform PdCaptiveCable operation.
+        self: This is reference to the instance of the class.
+        request:This parameter holds the request message sent by the client.
+        context:Provides contextual information about the RPC, 
+        including handling deadlines and cancellations.
         """
         # Find the USB device
         device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
@@ -291,7 +291,7 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
 
     def pd_captive_cable(self, device):
         """
-        Method to perform PdCaptiveCable operation on the USB device.
+        Switch PD to captive cable
         """
         # Control transfer parameters for PdCaptiveCable
         bmRequestType = 0x40  # Request type: Vendor, Host-to-device, Device-to-interface
@@ -309,7 +309,10 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
     #----------------------------------------------------------------
     def PdChargerPort(self, request, context):
         """
-        Method to perform PdCaptiveCable operation.
+        self: This is reference to the instance of the class.
+        request:This parameter holds the request message sent by the client.
+        context:Provides contextual information about the RPC, 
+        including handling deadlines and cancellations.
         """
         # Find the USB device
         device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
@@ -329,7 +332,7 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
 
     def pd_charger_port(self, device):
         """
-        Method to perform PdCaptiveCable operation on the USB device.
+        Switch PD to charger receptacle
         """
         # Control transfer parameters for PdCaptiveCable
         bmRequestType = 0x40  # Request type: Vendor, Host-to-device, Device-to-interface
@@ -346,10 +349,10 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
    
     def SendPRswapCommand(self, request, context):
         """
-        # Initiate power role swap
-        self: This is a reference to the instance of the class GreetingService. 
-        request: This parameter represents the request object sent by the client. I
-        context: This parameter provides contextual information about the RPC call
+        self: This is reference to the instance of the class.
+        request:This parameter holds the request message sent by the client.
+        context:Provides contextual information about the RPC, 
+        including handling deadlines and cancellations.
         """
         # Initiate power role swap
         device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
@@ -367,10 +370,10 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
 
     def SendDRswapCommand(self, request, context):
         """
-        # Initiate data role swap
-        self: This is a reference to the instance of the class GreetingService. 
-        request: This parameter represents the request object sent by the client. I
-        context: This parameter provides contextual information about the RPC call
+        self: This is reference to the instance of the class.
+        request:This parameter holds the request message sent by the client.
+        context:Provides contextual information about the RPC, 
+        including handling deadlines and cancellations.
         """
         # Initiate data role swap
         device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
@@ -386,15 +389,100 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
 
         return model3501_pb2.DRswapResponse(message="Control transfer result for DRSWAP command:\n{}".format(result_drswap))
 
+    def GetPowerRole(self, request, context):
+        """
+        Read the current power role
+        """
+        # Find the USB device
+        device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
+        if device is None:
+            return model3501_pb2.GetPowerRoleResponse(power_role=model3501_pb2.INVALID)
+
+        # Set configuration
+        device.set_configuration()
+
+        # First control transfer (HOST to DEVICE)
+        bmRequestType = 0x40  # Request type: Vendor, Host-to-device, Device-to-interface
+        bRequest = 0xE4        # Request code
+        wValue = 0x0000        # Value
+        wIndex = 0x0000        # Index
+        wLength = 0x0010       # Length
+
+        data1 = [0x00, 0x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+
+        result1 = device.ctrl_transfer(bmRequestType, bRequest, wValue, wIndex, data1)
+
+        if result1 != 16:
+            return model3501_pb2.GetPowerRoleResponse(power_role=model3501_pb2.INVALID)
+
+        # Second control transfer (HOST to DEVICE)
+        bmRequestType = 0xC0  # Request type: Vendor, Device-to-host, Device-to-interface
+        bRequest = 0xE4        # Request code
+        wValue = 0x0000        # Value
+        wIndex = 0x0000        # Index
+        wLength = 0x0010       # Length
+
+        result2 = device.ctrl_transfer(bmRequestType, bRequest, wValue, wIndex, wLength)
+
+        hex_strings = ['0x{:02X}'.format(byte) for byte in result2]
+        formatted_hex_string = ' '.join(hex_strings)
+        
+        sink_data = "0x00 0x28 0x02 0x01 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00"
+        source_data = "0x00 0x28 0x02 0x02 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00"
+
+        if formatted_hex_string == sink_data:
+            return model3501_pb2.GetPowerRoleResponse(power_role=model3501_pb2.SINK)
+        elif formatted_hex_string == source_data:
+            return model3501_pb2.GetPowerRoleResponse(power_role=model3501_pb2.SOURCE)
+        else:
+            return model3501_pb2.GetPowerRoleResponse(power_role=model3501_pb2.INVALID)
+    
+    def GetRdo(self, request, context):
+        """
+        Read the RDO for the current power contract
+        """
+        device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
+        if device is None:
+            return model3501_pb2.GetRdoResponse(rdo_data="Device not found")
+        
+        device.set_configuration()
+        
+        bmRequestType = 0x40  # Request type: Vendor, Host-to-device, Device-to-interface
+        bRequest = 0xE4        # Request code
+        wValue = 0x0000        # Value
+        wIndex = 0x0000        # Index
+        wLength = 0x0010       # Length
+        
+        data1 = [0x00, 0x2A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+        
+        result1 = device.ctrl_transfer(bmRequestType, bRequest, wValue, wIndex, data1)
+        
+        if result1 == 16:
+            bmRequestType = 0xC0  # Request type: Vendor, Device-to-host, Device-to-interface
+            bRequest = 0xE4        # Request code
+            wValue = 0x0000        # Value
+            wIndex = 0x0000        # Index
+            wLength = 0x0010       # Length
+        
+            result2 = device.ctrl_transfer(bmRequestType, bRequest, wValue, wIndex, wLength)
+        
+            hex_strings = ['0x{:02X}'.format(byte) for byte in result2]
+            formatted_hex_string = ' '.join(hex_strings)
+            
+            return model3501_pb2.GetRdoResponse(rdo_data=formatted_hex_string)
+        
+        else:
+            return model3501_pb2.GetRdoResponse(rdo_data="Invalid command")
+        
 def serve(port):
     """
-    Method to start the gRPC server.
+    Method to start the gRPC server with port.
     """
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     model3501_pb2_grpc.add_GreetingServiceServicer_to_server(GreetingService(), server)
     server.add_insecure_port('[::]:' + str(port))
     server.start()
-    print("Model3501grpcapi-V1.2.0")
+    print("Model3501grpcapi-V1.3.0")
     print("Server started. Listening on port", port, "...")
     try:
         server.wait_for_termination()
