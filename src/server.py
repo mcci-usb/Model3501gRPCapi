@@ -95,6 +95,9 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
         elif speed_type == 'h':
             success = self.set_device_speed(device, 'h')
             speed = "High Speed"
+        elif speed_type == 'f':
+            success = self.set_device_speed(device, 'f')
+            speed = "Full Speed"
         else:
             print("Invalid speed type")
             return model3501_pb2.SpeedResponse(message="Invalid speed type")
@@ -116,6 +119,8 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
             bRequest = 0x15  # Super Speed request
         elif speed_type == 'h':
             bRequest = 0x14  # High Speed request
+        elif speed_type == 'f':
+            bRequest = 0x13
         else:
             return False
 
