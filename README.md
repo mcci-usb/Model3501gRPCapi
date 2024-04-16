@@ -128,6 +128,12 @@ python client.py 192.168.x.xx 2023 pdcaptivecable
 
 python client.py 192.168.x.xx 2023 pdchargerport
 # Switch PD to charger receptacle
+
+python client.py 192.168.x.xx 2023 get_power_role
+# Read the current power role
+
+python client.py 192.168.x.xx 2023 get_rdo
+# Read the RDO for the current power contract
 ```
 
 ## Model3501gRPC Preview
