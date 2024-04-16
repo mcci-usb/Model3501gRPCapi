@@ -21,6 +21,7 @@ import argparse
 def list_devices(server_address):
     """
     Method to list USB devices connected to the server.
+    server_address: The address of the gRPC server where the service is running.
     """
     with grpc.insecure_channel(server_address) as channel:
         stub = model3501_pb2_grpc.GreetingServiceStub(channel)
@@ -38,6 +39,7 @@ def set_speed(server_address, speed_type):
     """
     Method to set the speed of the USB device.
     speed type: speed type is super speed or high speed.
+    server_address: The address of the gRPC server where the service is running.
     """
     with grpc.insecure_channel(server_address) as channel:
         stub = model3501_pb2_grpc.GreetingServiceStub(channel)
@@ -50,6 +52,7 @@ def enumerate_charge(server_address, watts):
     """
     Method to emulate charging on the USB device.
     watts: to set emulatecharge in watts.
+    server_address: The address of the gRPC server where the service is running.
     """
     with grpc.insecure_channel(server_address) as channel:
         stub = model3501_pb2_grpc.GreetingServiceStub(channel)
@@ -60,7 +63,8 @@ def enumerate_charge(server_address, watts):
 
 def cd_stress_on(server_address):
     """
-    Enable connect disconnect stress
+    Enable connect disconnect stress.
+    server_address: The address of the gRPC server where the service is running.
     """
     with grpc.insecure_channel(server_address) as channel:
         stub = model3501_pb2_grpc.GreetingServiceStub(channel)
@@ -71,7 +75,8 @@ def cd_stress_on(server_address):
 
 def cd_stress_off(server_address):
     """
-    Disable connect disconnect stress
+    Disable connect disconnect stress.
+    server_address: The address of the gRPC server where the service is running.
     """
     with grpc.insecure_channel(server_address) as channel:
         stub = model3501_pb2_grpc.GreetingServiceStub(channel)
@@ -83,6 +88,7 @@ def cd_stress_off(server_address):
 def pd_captive_cable(server_address):
     """
     Method to perform PdCaptiveCable operation.
+    server_address: The address of the gRPC server where the service is running.
     """
     with grpc.insecure_channel(server_address) as channel:
         stub = model3501_pb2_grpc.GreetingServiceStub(channel)
@@ -94,6 +100,7 @@ def pd_captive_cable(server_address):
 def pd_charger_port(server_address):
     """
     Method to perform PdCaptiveCable operation.
+    server_address: The address of the gRPC server where the service is running.
     """
     with grpc.insecure_channel(server_address) as channel:
         stub = model3501_pb2_grpc.GreetingServiceStub(channel)
@@ -104,7 +111,8 @@ def pd_charger_port(server_address):
 
 def prswap(server_address):
     """
-    Initiate power role swap
+    Initiate power role swap.
+    server_address: The address of the gRPC server where the service is running.
     """
     with grpc.insecure_channel(server_address) as channel:
         stub = model3501_pb2_grpc.GreetingServiceStub(channel)
@@ -115,7 +123,8 @@ def prswap(server_address):
 
 def drswap(server_address):
     """
-    Initiate data role swap
+    Initiate data role swap.
+    server_address: The address of the gRPC server where the service is running.
     """
     with grpc.insecure_channel(server_address) as channel:
         stub = model3501_pb2_grpc.GreetingServiceStub(channel)
@@ -127,6 +136,7 @@ def drswap(server_address):
 def get_power_role(server_address):
     """
     Method to get the power role of the USB device.
+    server_address: The address of the gRPC server where the service is running.
     """
     with grpc.insecure_channel(server_address) as channel:
         stub = model3501_pb2_grpc.GreetingServiceStub(channel)
@@ -147,6 +157,7 @@ def get_power_role(server_address):
 def get_rdo(server_address):
     """
     Method to get the RDO data from the USB device.
+    server_address: The address of the gRPC server where the service is running.
     """
     with grpc.insecure_channel(server_address) as channel:
         stub = model3501_pb2_grpc.GreetingServiceStub(channel)
@@ -156,13 +167,16 @@ def get_rdo(server_address):
         print("Response from GetRdo:", response.rdo_data)
 
 if __name__ == '__main__':
+    
     parser = argparse.ArgumentParser(description='gRPC Client')
     parser.add_argument('server_ip', help='Server IP address')
     parser.add_argument('server_port', type=int, help='Server port number')
     parser.add_argument('action', choices=['list', 'set_speed', 'enumerateCharge', 'cd_stress_on','cd_stress_off','pdcaptivecable','pdchargerport','prswap', 'drswap','get_power_role','get_rdo'], help='Action to perform')
     parser.add_argument('value', nargs='?', help='Value for the action [s, h set the speed, W Emulate a PD charger with max W]')
+
     args = parser.parse_args()
-    
+    # print("list  List Type-C MUTTs by index")
+
     server_address = f"{args.server_ip}:{args.server_port}"
     
     if args.action == 'list':
