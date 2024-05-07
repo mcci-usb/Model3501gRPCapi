@@ -166,14 +166,54 @@ def get_rdo(server_address):
         response = stub.GetRdo(model3501_pb2.GetRdoRequest())
         print("Response from GetRdo:", response.rdo_data)
 
+def reconnect(server_address, delay_disconnect_ms, delay_reconnect_ms):
+    """
+    Method to disconnect and reconnect the USB device with specified delays.
+    """
+    with grpc.insecure_channel(server_address) as channel:
+        stub = model3501_pb2_grpc.GreetingServiceStub(channel)
+
+        # Create a ReconnectRequest message
+        request = model3501_pb2.ReconnectRequest(
+            delay_disconnect_ms=delay_disconnect_ms,
+            delay_reconnect_ms=delay_reconnect_ms
+        )
+
+        # Call the ReconnectDevice method
+        response = stub.ReconnectDevice(request)
+        print("Response from ReconnectDevice:", response.message)
+    
+def send_vconn_swap(server_address):
+    """
+    Initiates the Vconn Swap operation by sending a request to the server.
+    """
+    # Create a gRPC channel and stub
+    with grpc.insecure_channel(server_address) as channel:
+        stub = model3501_pb2_grpc.GreetingServiceStub(channel)
+
+        # Create a VconnSwapRequest message (empty since no parameters are needed)
+        request = model3501_pb2.VconnSwapRequest()
+
+        # Call the SendVconnSwapCommand method
+        response = stub.SendVconnSwapCommand(request)
+
+        # Print the response message received from the server
+        print("Response from Vconn Swap Command:", response.message)
+
+
 if __name__ == '__main__':
     
     parser = argparse.ArgumentParser(description='gRPC Client')
     parser.add_argument('server_ip', help='Server IP address')
     parser.add_argument('server_port', type=int, help='Server port number')
-    parser.add_argument('action', choices=['list', 'set_speed', 'enumerateCharge', 'cd_stress_on','cd_stress_off','pdcaptivecable','pdchargerport','prswap', 'drswap','get_power_role','get_rdo'], help='Action to perform')
+    parser.add_argument('action', choices=['list', 'set_speed', 'enumerateCharge', 'cd_stress_on','cd_stress_off','pdcaptivecable','pdchargerport','prswap', 'drswap','get_power_role','get_rdo','reconnect','vconnswap'], help='Action to perform')
     parser.add_argument('value', nargs='?', help='Value for the action [s, h set the speed, W Emulate a PD charger with max W]')
-
+    
+     # Add reconnect-related arguments
+    
+    parser.add_argument('--delay_reconnect', type=int, default=0, help='Delay before reconnecting (in milliseconds)')
+    parser.add_argument('--delay_disconnect', type=int, default=0, help='Delay before disconnecting (in milliseconds)')
+    
     args = parser.parse_args()
     # print("list  List Type-C MUTTs by index")
 
@@ -213,5 +253,9 @@ if __name__ == '__main__':
     # Inside the main block
     elif args.action == 'get_rdo':
         get_rdo(server_address)
+    elif args.action == 'reconnect':
+        reconnect(server_address, args.delay_reconnect, args.delay_disconnect)
+    elif args.action == 'vconnswap':
+        send_vconn_swap(server_address)
     else:
         print("Invalid action")

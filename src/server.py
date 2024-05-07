@@ -473,6 +473,65 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
         
         else:
             return model3501_pb2.GetRdoResponse(rdo_data="Invalid command")
+    
+    def ReconnectDevice(self, request, context):
+        """
+        Implementation of the ReconnectDevice RPC method.
+        """
+        delay_disconnect_ms = request.delay_disconnect_ms
+        delay_reconnect_ms = request.delay_reconnect_ms
+
+        # Find the USB device
+        device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
+
+        if device is None:
+            return model3501_pb2.ReconnectResponse(message="Device not found")
+
+        # Setup packet details
+        bmRequestType = 0x40  # Request type: Vendor, Host-to-device, Device-to-interface
+        bRequest = 0x10       # Request code
+        wLength = 0x00
+
+        # Send control transfer for disconnect
+        device.ctrl_transfer(bmRequestType, bRequest, delay_disconnect_ms, delay_reconnect_ms, wLength)
+
+        # Optionally wait for a specific duration
+        # time.sleep(1)
+
+        # Send control transfer for reconnect
+        # device.ctrl_transfer(bmRequestType, bRequest, delay_reconnect_ms, delay_disconnect_ms)
+
+        return model3501_pb2.ReconnectResponse(message="Disconnect and reconnect completed successfully")
+    
+    def SendVconnSwapCommand(self, request, context):
+        """
+        Initiates Vconn Swap operation.
+        """
+        # Find the USB device
+        device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
+
+        if device is None:
+            print("Device not found")
+            return model3501_pb2.VconnSwapResponse(message="Device not found")
+
+        # Set configuration
+        device.set_configuration()
+
+        # Setup packet details HOST to DEVICE
+        bmRequestType_vconnswap = 0x40  # Request type: Vendor, Host-to-device, Device-to-interface
+        bRequest_vconnswap = 0xE4       # Request code for VconnSwap command
+        wValue_vconnswap = 0x0000       # Value
+        wIndex_vconnswap = 0x0000       # Index
+        wLength_vconnswap = 0x0010      # Length
+
+        # Data for VconnSwap command
+        data_vconnswap = [0x00, 0x1B, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+
+        # Send control transfer for VconnSwap command
+        result_vconnswap = device.ctrl_transfer(bmRequestType_vconnswap, bRequest_vconnswap, wValue_vconnswap, wIndex_vconnswap, data_vconnswap)
+
+        return model3501_pb2.VconnSwapResponse(message="Control transfer result for VconnSwap command:\n{}".format(result_vconnswap))
+
         
 def serve(port):
     """
@@ -482,7 +541,7 @@ def serve(port):
     model3501_pb2_grpc.add_GreetingServiceServicer_to_server(GreetingService(), server)
     server.add_insecure_port('[::]:' + str(port))
     server.start()
-    print("Model3501grpcapi-V1.3.0")
+    print("Model3501grpcapi-V1.4.0")
     print("Server started. Listening on port", port, "...")
     try:
         server.wait_for_termination()

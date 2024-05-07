@@ -79,6 +79,16 @@ class GreetingServiceStub(object):
                 request_serializer=model3501__pb2.GetRdoRequest.SerializeToString,
                 response_deserializer=model3501__pb2.GetRdoResponse.FromString,
                 )
+        self.ReconnectDevice = channel.unary_unary(
+                '/hi_hello.GreetingService/ReconnectDevice',
+                request_serializer=model3501__pb2.ReconnectRequest.SerializeToString,
+                response_deserializer=model3501__pb2.ReconnectResponse.FromString,
+                )
+        self.SendVconnSwapCommand = channel.unary_unary(
+                '/hi_hello.GreetingService/SendVconnSwapCommand',
+                request_serializer=model3501__pb2.VconnSwapRequest.SerializeToString,
+                response_deserializer=model3501__pb2.VconnSwapResponse.FromString,
+                )
 
 
 class GreetingServiceServicer(object):
@@ -162,6 +172,18 @@ class GreetingServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ReconnectDevice(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def SendVconnSwapCommand(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_GreetingServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -229,6 +251,16 @@ def add_GreetingServiceServicer_to_server(servicer, server):
                     servicer.GetRdo,
                     request_deserializer=model3501__pb2.GetRdoRequest.FromString,
                     response_serializer=model3501__pb2.GetRdoResponse.SerializeToString,
+            ),
+            'ReconnectDevice': grpc.unary_unary_rpc_method_handler(
+                    servicer.ReconnectDevice,
+                    request_deserializer=model3501__pb2.ReconnectRequest.FromString,
+                    response_serializer=model3501__pb2.ReconnectResponse.SerializeToString,
+            ),
+            'SendVconnSwapCommand': grpc.unary_unary_rpc_method_handler(
+                    servicer.SendVconnSwapCommand,
+                    request_deserializer=model3501__pb2.VconnSwapRequest.FromString,
+                    response_serializer=model3501__pb2.VconnSwapResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -458,5 +490,39 @@ class GreetingService(object):
         return grpc.experimental.unary_unary(request, target, '/hi_hello.GreetingService/GetRdo',
             model3501__pb2.GetRdoRequest.SerializeToString,
             model3501__pb2.GetRdoResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ReconnectDevice(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/hi_hello.GreetingService/ReconnectDevice',
+            model3501__pb2.ReconnectRequest.SerializeToString,
+            model3501__pb2.ReconnectResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def SendVconnSwapCommand(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/hi_hello.GreetingService/SendVconnSwapCommand',
+            model3501__pb2.VconnSwapRequest.SerializeToString,
+            model3501__pb2.VconnSwapResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
