@@ -17,6 +17,7 @@ service GreetingService {
     rpc GetPowerRole (GetPowerRoleRequest) returns (GetPowerRoleResponse) {}
     rpc GetRdo (GetRdoRequest) returns (GetRdoResponse) {}
     rpc ReconnectDevice (ReconnectRequest) returns (ReconnectResponse) {}
+    rpc SendVconnSwapCommand (VconnSwapRequest) returns (VconnSwapResponse) {}
 }
 
 // Request message for SayHi
@@ -167,5 +168,13 @@ message ReconnectRequest {
 
 // Response message for ReconnectDevice
 message ReconnectResponse {
+    string message = 1;
+}
+
+// Request message for VconnSwap
+message VconnSwapRequest {}
+
+// Response message for VconnSwap
+message VconnSwapResponse {
     string message = 1;
 }

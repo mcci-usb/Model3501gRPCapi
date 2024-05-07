@@ -502,6 +502,36 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
         # device.ctrl_transfer(bmRequestType, bRequest, delay_reconnect_ms, delay_disconnect_ms)
 
         return model3501_pb2.ReconnectResponse(message="Disconnect and reconnect completed successfully")
+    
+    def SendVconnSwapCommand(self, request, context):
+        """
+        Initiates Vconn Swap operation.
+        """
+        # Find the USB device
+        device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
+
+        if device is None:
+            print("Device not found")
+            return model3501_pb2.VconnSwapResponse(message="Device not found")
+
+        # Set configuration
+        device.set_configuration()
+
+        # Setup packet details HOST to DEVICE
+        bmRequestType_vconnswap = 0x40  # Request type: Vendor, Host-to-device, Device-to-interface
+        bRequest_vconnswap = 0xE4       # Request code for VconnSwap command
+        wValue_vconnswap = 0x0000       # Value
+        wIndex_vconnswap = 0x0000       # Index
+        wLength_vconnswap = 0x0010      # Length
+
+        # Data for VconnSwap command
+        data_vconnswap = [0x00, 0x1B, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+
+        # Send control transfer for VconnSwap command
+        result_vconnswap = device.ctrl_transfer(bmRequestType_vconnswap, bRequest_vconnswap, wValue_vconnswap, wIndex_vconnswap, data_vconnswap)
+
+        return model3501_pb2.VconnSwapResponse(message="Control transfer result for VconnSwap command:\n{}".format(result_vconnswap))
+
         
 def serve(port):
     """
