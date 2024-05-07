@@ -511,7 +511,7 @@ def serve(port):
     model3501_pb2_grpc.add_GreetingServiceServicer_to_server(GreetingService(), server)
     server.add_insecure_port('[::]:' + str(port))
     server.start()
-    print("Model3501grpcapi-V1.3.0")
+    print("Model3501grpcapi-V1.4.0")
     print("Server started. Listening on port", port, "...")
     try:
         server.wait_for_termination()
