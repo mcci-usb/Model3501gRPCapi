@@ -134,6 +134,12 @@ python client.py 192.168.x.xx 2023 get_power_role
 
 python client.py 192.168.x.xx 2023 get_rdo
 # Read the RDO for the current power contract
+
+python client.py 192.168.x.xx 2023 reconnect --delay_reconnect <delay_ms> --delay_disconnect <delay_ms>
+
+
+python client.py 192.168.x.xx 2023 vconnswap
+#Initiate Vconn swap
 ```
 
 ## Model3501gRPC Preview
