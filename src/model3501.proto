@@ -16,6 +16,7 @@ service GreetingService {
     rpc PdChargerPort (PdChargerPortRequest) returns (PdChargerPortResponse) {}
     rpc GetPowerRole (GetPowerRoleRequest) returns (GetPowerRoleResponse) {}
     rpc GetRdo (GetRdoRequest) returns (GetRdoResponse) {}
+    rpc ReconnectDevice (ReconnectRequest) returns (ReconnectResponse) {}
 }
 
 // Request message for SayHi
@@ -156,4 +157,15 @@ message GetRdoRequest {}
 // Response message for GetRdo
 message GetRdoResponse {
   string rdo_data = 1;
+}
+
+// Request message for ReconnectDevice
+message ReconnectRequest {
+    int32 delay_disconnect_ms = 1;
+    int32 delay_reconnect_ms = 2;
+}
+
+// Response message for ReconnectDevice
+message ReconnectResponse {
+    string message = 1;
 }

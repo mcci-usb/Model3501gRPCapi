@@ -473,6 +473,35 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
         
         else:
             return model3501_pb2.GetRdoResponse(rdo_data="Invalid command")
+    
+    def ReconnectDevice(self, request, context):
+        """
+        Implementation of the ReconnectDevice RPC method.
+        """
+        delay_disconnect_ms = request.delay_disconnect_ms
+        delay_reconnect_ms = request.delay_reconnect_ms
+
+        # Find the USB device
+        device = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
+
+        if device is None:
+            return model3501_pb2.ReconnectResponse(message="Device not found")
+
+        # Setup packet details
+        bmRequestType = 0x40  # Request type: Vendor, Host-to-device, Device-to-interface
+        bRequest = 0x10       # Request code
+        wLength = 0x00
+
+        # Send control transfer for disconnect
+        device.ctrl_transfer(bmRequestType, bRequest, delay_disconnect_ms, delay_reconnect_ms, wLength)
+
+        # Optionally wait for a specific duration
+        # time.sleep(1)
+
+        # Send control transfer for reconnect
+        # device.ctrl_transfer(bmRequestType, bRequest, delay_reconnect_ms, delay_disconnect_ms)
+
+        return model3501_pb2.ReconnectResponse(message="Disconnect and reconnect completed successfully")
         
 def serve(port):
     """
