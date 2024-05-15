@@ -108,8 +108,11 @@ python client.py 192.168.x.xx 2023 set_speed s #(set super speed)
 
 python client.py 192.168.x.xx 2023 set_speed h #(set high speed)
 
-python client.py 192.168.x.xx 2023 enumerateCharge 40
+python client.py 192.168.x.xx 2023 emulateCharger 15
 # (Emulate a PD charger with max watts 'W')
+# 15W (5V 3.0A)
+# 27W (9V 3.0A)
+# 45W (15V 3.0A)
 
 python client.py 192.168.x.xx 2023 cd_stress_on
 # Enable connect disconnect stress
