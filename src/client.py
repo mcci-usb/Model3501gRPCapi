@@ -206,7 +206,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='gRPC Client')
     parser.add_argument('server_ip', help='Server IP address')
     parser.add_argument('server_port', type=int, help='Server port number')
-    parser.add_argument('action', choices=['list', 'set_speed', 'enumerateCharge', 'cd_stress_on','cd_stress_off','pdcaptivecable','pdchargerport','prswap', 'drswap','get_power_role','get_rdo','reconnect','vconnswap'], help='Action to perform')
+    parser.add_argument('action', choices=['list', 'set_speed', 'emulateCharger', 'cd_stress_on','cd_stress_off','pdcaptivecable','pdchargerport','prswap', 'drswap','get_power_role','get_rdo','reconnect','vconnswap'], help='Action to perform')
     parser.add_argument('value', nargs='?', help='Value for the action [s, h set the speed, W Emulate a PD charger with max W]')
     
      # Add reconnect-related arguments
@@ -226,7 +226,7 @@ if __name__ == '__main__':
             set_speed(server_address, args.value)
         else:
             print("Speed type not provided. Please provide speed type (s for Super Speed, h for High Speed).")
-    elif args.action == 'enumerateCharge':
+    elif args.action == 'emulateCharger':
         if args.value is not None:
             enumerate_charge(server_address, int(args.value))
         else:
