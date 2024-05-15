@@ -167,26 +167,44 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
         bmRequestType_setup = 0x40
         bRequest_setup = 0xEE
         
+        # First control transfer (HOST to DEVICE)
+        bmRequestType_2 = 0x40  # Request type: Vendor, Host-to-device, Device-to-interface
+        bRequest_2 = 0xEE       # Request code
+        wValue_2 = 0x0002     # Value
+        wIndex_2 = 0x0000      # Index
+        wLength_2 = 0x000a       # Length
+        
+        # First control transfer (HOST to DEVICE)
+        bmRequestType_3 = 0x40  # Request type: Vendor, Host-to-device, Device-to-interface
+        bRequest_3 = 0xEE       # Request code
+        wValue_3 = 0x0003      # Value
+        wIndex_3 = 0x0000      # Index
+        wLength_3 = 0x000e       # Length
+        
         if watts <= 15:
-            data_to_send_setup = [0x01, 0x01, 0xC8, 0x90, 0x01, 0x04]
-            wValue_setup = 0x0000
-        elif watts <= 27:
-            data_to_send_setup = [0x01, 0x02, 0x2C, 0x91, 0x01, 0x04]
+            data_to_send_setup = [0x01, 0x01, 0x2C, 0x91, 0x01, 0x04]
             wValue_setup = 0x0001
-        elif watts <= 45:
-            data_to_send_setup = [0x01, 0x03, 0x2C, 0x91, 0x01, 0x04, 0x2C]
+        elif watts <= 27:
+            data_to_send_setup = [0x01, 0x02, 0x2C, 0x91, 0x01, 0x04, 0xB1, 0xD0, 0x02, 0x00]
             wValue_setup = 0x0002
+        elif watts <= 45:
+            data_to_send_setup = [0x01, 0x03, 0x2C, 0x91, 0x01, 0x04, 0x02C, 0xD1, 0x02, 0x00, 0x2C, 0xB1, 0x04, 0x00]
+            wValue_setup = 0x0003
         else:
             return False  # Invalid wattage
 
         # Send setup control transfer
         result_setup = device.ctrl_transfer(bmRequestType_setup, bRequest_setup, wValue_setup, wIndex_ctrl, data_to_send_setup)
-        print("Setup control transfer result:", result_setup)
+        print("Setup control transfer result upto 15W:", result_setup)
+        
+        result_setup2 = device.ctrl_transfer(bmRequestType_2, bRequest_2, wValue_2, wIndex_2, data_to_send_setup)
+        print("Setup control transfer result upto 27W:", result_setup2)
+        
+        result_setup2 = device.ctrl_transfer(bmRequestType_3, bRequest_3, wValue_3, wIndex_3, data_to_send_setup)
+        print("Setup control transfer result upto 45W:", result_setup2)
 
         # Send control transfer with payload
         result_ctrl = device.ctrl_transfer(bmRequestType_ctrl, bRequest_ctrl, wValue_ctrl, wIndex_ctrl)
-        # print("Control transfer result:", result_ctrl)
-
         return True
     
     def CdStressOn(self, request, context):
