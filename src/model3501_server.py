@@ -383,6 +383,11 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
 
         # Send control transfer for PRswap command
         result_prswap = device.ctrl_transfer(0x40, 0xE4, 0x0000, 0x0000, data_prswap)
+        if result_prswap == 16:
+            print("PRswap Command sent successfully!")
+        else:
+            print("PRswap command sent failed!")
+        
 
         return model3501_pb2.PRswapResponse(message="Control transfer result for PRswap command:\n{}".format(result_prswap))
 
@@ -404,6 +409,11 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
 
         # Send control transfer for DRSWAP command
         result_drswap = device.ctrl_transfer(0x40, 0xE4, 0x0000, 0x0000, data_drswap)
+        
+        if result_drswap == 16:
+            print("DRswap Command sent successfully!")
+        else:
+            print("DRswap command sent failed!")
 
         return model3501_pb2.DRswapResponse(message="Control transfer result for DRSWAP command:\n{}".format(result_drswap))
 
@@ -449,10 +459,13 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
         source_data = "0x00 0x28 0x02 0x02 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00"
 
         if formatted_hex_string == sink_data:
+            print("Sent GetpowerRole command success fully!")
             return model3501_pb2.GetPowerRoleResponse(power_role=model3501_pb2.SINK)
         elif formatted_hex_string == source_data:
+            print("Sent GetpowerRole command success fully!")
             return model3501_pb2.GetPowerRoleResponse(power_role=model3501_pb2.SOURCE)
         else:
+            print("Sent GetpowerRole command is Failed!")
             return model3501_pb2.GetPowerRoleResponse(power_role=model3501_pb2.INVALID)
     
     def GetRdo(self, request, context):
@@ -486,7 +499,7 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
         
             hex_strings = ['0x{:02X}'.format(byte) for byte in result2]
             formatted_hex_string = ' '.join(hex_strings)
-            
+            print("GetRdo command sent successfully!")
             return model3501_pb2.GetRdoResponse(rdo_data=formatted_hex_string)
         
         else:
@@ -518,7 +531,7 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
 
         # Send control transfer for reconnect
         # device.ctrl_transfer(bmRequestType, bRequest, delay_reconnect_ms, delay_disconnect_ms)
-
+        print("Sent Reconnect command sent successfully!")
         return model3501_pb2.ReconnectResponse(message="Disconnect and reconnect completed successfully")
     
     def SendVconnSwapCommand(self, request, context):
@@ -559,7 +572,7 @@ def serve(port):
     model3501_pb2_grpc.add_GreetingServiceServicer_to_server(GreetingService(), server)
     server.add_insecure_port('[::]:' + str(port))
     server.start()
-    print("Model3501grpcapi-V1.4.0")
+    print("Model3501grpcapi-V1.6.0")
     print("Server started. Listening on port", port, "...")
     try:
         server.wait_for_termination()
