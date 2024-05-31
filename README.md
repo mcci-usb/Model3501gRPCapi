@@ -52,7 +52,7 @@ pip install protobuf
 To run the server script, execute the following command in your terminal:
 
 ```shell
-python server.py <port_number>
+python model3501_server.py <port_number>
 ```
 
 Replace <port_number> with the desired port number where the server should listen for incoming connections.
@@ -62,7 +62,7 @@ Replace <port_number> with the desired port number where the server should liste
 To run the client script, execute the following command in your terminal:
 
 ```shell
-python client.py <server_ip> <port_number> <cmd> <value>
+python model3501_client.py <server_ip> <port_number> <cmd> <value>
 ```
 
 ```shell
@@ -78,7 +78,7 @@ Note: The server and client run on different machines.
 
 ## cmd line arguments to Server
 
-* argument 1: `server.py`
+* argument 1: `model3501_server.py`
 * argument 2: `port_number`
 
 **NOTE:**
@@ -86,12 +86,12 @@ Note: The server and client run on different machines.
 * example of port_number
 
 ```shell
-python server.py 2023
+python model3501_server.py 2023
 ```
 
 ## cmd line arguments to Client
 
-* argument 1: `client.py`
+* argument 1: `model3501_client.py`
 * argument 2: `server_ip_address`
 * argument 3: `server_port_number`
 * argument 4: `action`
@@ -100,13 +100,13 @@ python server.py 2023
 **NOTE:**
 
 ```shell
-python client.py 192.168.x.xx 2023 -h
+python model3501_client.py 192.168.x.xx 2023 -h
 
-python client.py 192.168.x.xx 2023 list
+python model3501_client.py 192.168.x.xx 2023 list
 
-python client.py 192.168.x.xx 2023 set_speed s #(set super speed)
+python model3501_client.py 192.168.x.xx 2023 set_speed s #(set super speed)
 
-python client.py 192.168.x.xx 2023 set_speed h #(set high speed)
+python model3501_client.py 192.168.x.xx 2023 set_speed h #(set high speed)
 
 python client.py 192.168.x.xx 2023 emulateCharger 15
 # (Emulate a PD charger with max watts 'W')
@@ -114,34 +114,34 @@ python client.py 192.168.x.xx 2023 emulateCharger 15
 # 27W (9V 3.0A)
 # 45W (15V 3.0A)
 
-python client.py 192.168.x.xx 2023 cd_stress_on
+python model3501_client.py 192.168.x.xx 2023 cd_stress_on
 # Enable connect disconnect stress
 
-python client.py 192.168.x.xx 2023 cd_stress_off
+python model3501_client.py 192.168.x.xx 2023 cd_stress_off
 # Disable connect disconnect stress
 
-python client.py 192.168.x.xx 2023 prswap
+python model3501_client.py 192.168.x.xx 2023 prswap
 # Initiate power role swap
 
-python client.py 192.168.x.xx 2023 drswap
+python model3501_client.py 192.168.x.xx 2023 drswap
 # Initiate data role swap
 
-python client.py 192.168.x.xx 2023 pdcaptivecable
+python model3501_client.py 192.168.x.xx 2023 pdcaptivecable
 # Switch PD to captive cable
 
-python client.py 192.168.x.xx 2023 pdchargerport
+python model3501_client.py 192.168.x.xx 2023 pdchargerport
 # Switch PD to charger receptacle
 
-python client.py 192.168.x.xx 2023 get_power_role
+python model3501_client.py 192.168.x.xx 2023 get_power_role
 # Read the current power role
 
-python client.py 192.168.x.xx 2023 get_rdo
+python model3501_client.py 192.168.x.xx 2023 get_rdo
 # Read the RDO for the current power contract
 
-python client.py 192.168.x.xx 2023 reconnect --delay_reconnect <delay_ms> --delay_disconnect <delay_ms>
+python model3501_client.py 192.168.x.xx 2023 reconnect --delay_reconnect <delay_ms> --delay_disconnect <delay_ms>
 
 
-python client.py 192.168.x.xx 2023 vconnswap
+python model3501_client.py 192.168.x.xx 2023 vconnswap
 #Initiate Vconn swap
 ```
 
@@ -156,3 +156,7 @@ python client.py 192.168.x.xx 2023 vconnswap
 ## Demo Video (Client)
 
 ![Demo Video](assets/Model3501-gRpc-client.gif)
+
+## Demo Video (both server and client Run in Single machine)
+
+![Demo Video](assets/Model3501-gRPC-api.gif)
