@@ -104,9 +104,11 @@ python model3501_client.py 192.168.x.xx 2023 -h
 
 python model3501_client.py 192.168.x.xx 2023 list
 
-python model3501_client.py 192.168.x.xx 2023 set_speed s #(set super speed)
+python model3501_client.py 192.168.x.xx 2023 set_speed ss #(set super speed)
 
-python model3501_client.py 192.168.x.xx 2023 set_speed h #(set high speed)
+python model3501_client.py 192.168.x.xx 2023 set_speed hs #(set high speed)
+
+python model3501_client.py 192.168.x.xx 2023 set_speed fs #(set full speed)
 
 python client.py 192.168.x.xx 2023 emulateCharger 15
 # (Emulate a PD charger with max watts 'W')
