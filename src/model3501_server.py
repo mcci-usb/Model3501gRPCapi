@@ -89,13 +89,13 @@ class GreetingService(model3501_pb2_grpc.GreetingServiceServicer):
         #This method sets the active configuration for the USB device
         device.set_configuration() 
 
-        if speed_type == 's':
+        if speed_type == 'ss':
             success = self.set_device_speed(device, 's')
             speed = "Super Speed"
-        elif speed_type == 'h':
+        elif speed_type == 'hs':
             success = self.set_device_speed(device, 'h')
             speed = "High Speed"
-        elif speed_type == 'f':
+        elif speed_type == 'fs':
             success = self.set_device_speed(device, 'f')
             speed = "Full Speed"
         else:
